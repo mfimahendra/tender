@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TenderDetail extends Model
+class CriteriaData extends Model
 {
-    protected $table = 'tender_details';
+    protected $table = 'criteria_details';
 
     protected $fillable = [
-        'tender_id',
-        'vendor_id',
-        'score',
-        'date',
-        'status',
+        'criteria_id',
+        'criteria_code',
+        'criteria_weight',
+        'criteria_type',
         'remark',
         'created_at',
         'updated_at'
     ];
 
-    use HasFactory;    
+
+    use HasFactory;
 }

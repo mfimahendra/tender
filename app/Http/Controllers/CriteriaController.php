@@ -202,4 +202,6 @@ class CriteriaController extends Controller
             return redirect()->route('criteria.index')->with('error', $th->getMessage());
         }
     }
+
+    // add CRUD function here of Criteria list & details, and Edit Criteria Values    
 }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tender;
 use App\Models\TenderDetail;
+use App\Models\CriteriaData;
+use App\Models\CriteriaValue;
 use Illuminate\Http\Request;
 
 class TenderDetailController extends Controller
@@ -12,9 +15,30 @@ class TenderDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($tender_id)
     {
-        //
+        $tender = Tender::get()->where('tender_id', $tender_id)->first();
+        $vendor_lists = TenderDetail::where('tender_id', '=', $tender_id)
+            ->join('vendors', 'tender_details.vendor_id', '=', 'vendors.vendor_id')
+            ->select('tender_details.*', 'vendors.vendor_name')
+            ->get();
+
+        $criteria_id = $tender->criteria_id;                
+
+        $criteria_data = CriteriaData::where('criteria_id', '=', $criteria_id)
+            ->join('criteria_masters', 'criteria_masters.criteria_code', '=', 'criterias.criteria_code')
+            ->select('criterias.*', 'criteria_masters.criteria_name')
+        ->get();
+        $criteria_values = CriteriaValue::where('tender_id', '=', $tender_id)->get();
+
+        return view ('tender.detail', [
+            'tender' => $tender,
+            'vendor_lists' => $vendor_lists,
+            'criteria_data' => $criteria_data,
+            'criteria_values' => $criteria_values,
+            'criteria_id' => $criteria_id
+        ]);
+
     }
 
     /**

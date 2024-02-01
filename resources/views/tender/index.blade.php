@@ -39,7 +39,7 @@
         @elseif(session('error'))
             <div id="error-alert" class="alert alert-danger">
                 {{ session('error') }}
-            </div>
+            </div>        
         @endif
         <div class="row">
             <div class="col-12">
@@ -83,7 +83,11 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $data->tender_id }}</td>
-                                                    <td>{{ $data->tender_name }}</td>
+                                                    <td>
+                                                        <a href="{{ route('tender.detail', $data->tender_id) }}">
+                                                            {{ $data->tender_name }}
+                                                        </a>
+                                                    </td>
                                                     <td>{{ $data->tender_date }}</td>
                                                     <td>
                                                         {{-- <form action="{{ route('vendor.destroy', $data->id) }}" method="POST">
