@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tender;
 use App\Models\TenderDetail;
+use App\Models\Criteria;
 use App\Models\CriteriaData;
 use App\Models\CriteriaValue;
 use Illuminate\Http\Request;
@@ -21,22 +22,23 @@ class TenderDetailController extends Controller
         $vendor_lists = TenderDetail::where('tender_id', '=', $tender_id)
             ->join('vendors', 'tender_details.vendor_id', '=', 'vendors.vendor_id')
             ->select('tender_details.*', 'vendors.vendor_name')
-            ->get();
+            ->get();        
 
-        $criteria_id = $tender->criteria_id;                
-
-        $criteria_data = CriteriaData::where('criteria_id', '=', $criteria_id)
+        $criteria_data = CriteriaData::where('tender_id', '=', $tender_id)
             ->join('criteria_masters', 'criteria_masters.criteria_code', '=', 'criteria_details.criteria_code')
             ->select('criteria_details.*', 'criteria_masters.criteria_name')
-        ->get();
+            ->get();
+        
         $criteria_values = CriteriaValue::where('tender_id', '=', $tender_id)->get();
+
+        $criteria_masters = Criteria::get();        
 
         return view ('tender.detail', [
             'tender' => $tender,
             'vendor_lists' => $vendor_lists,
             'criteria_data' => $criteria_data,
             'criteria_values' => $criteria_values,
-            'criteria_id' => $criteria_id
+            'criteria_masters' => $criteria_masters,
         ]);
 
     }

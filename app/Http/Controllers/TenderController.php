@@ -24,7 +24,7 @@ class TenderController extends Controller
 
         return view ('tender.index', [
             'tender_lists' => $tender_lists,
-        ]);
+        ]);        
     }
 
     /**

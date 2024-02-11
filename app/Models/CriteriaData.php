@@ -10,7 +10,7 @@ class CriteriaData extends Model
     protected $table = 'criteria_details';
 
     protected $fillable = [
-        'criteria_id',
+        'tender_id',
         'criteria_code',
         'criteria_weight',
         'criteria_type',

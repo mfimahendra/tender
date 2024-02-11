@@ -20,9 +20,9 @@
                         Add Vendor
                     </button>
                 </a>
-                <button class="btn btn btn-info btn-sm float-right mr-1">
+                <button class="btn btn btn-info btn-sm float-right mr-1" onclick="openModalCriteriaData()">
                     <i class="fas fa-file-alt"></i>&nbsp;
-                    Add Criteria
+                    Criteria Data
                 </button>
             </div>
         </div>
@@ -39,8 +39,8 @@
             <div id="error-alert" class="alert alert-danger">
                 {{ session('error') }}
             </div>
-        @endif
-        @if ($criteria_id == null)
+        @endif        
+        @if (count($criteria_data) == 0)
             <div id="warning-alert" class="alert alert-warning">
                 <b>Warning!</b> Kriteria belum ditambahkan!!!
             </div>
@@ -120,6 +120,36 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalCriteriaData">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Criteria Data<b class="text-primary"></b></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">                                        
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kriteria</th>
+                                <th>Bobot Kriteria</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tender_criteria_data_body">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>            
+        </div>        
+    </div>
+
     <div class="modal fade" id="modalCriteriaValue">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -138,7 +168,8 @@
                 </div>
             </div>            
         </div>        
-    </div>    
+    </div>
+    
 @endsection
 
 @section('scripts')
@@ -159,14 +190,58 @@
     <script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js') }}"></script>
 
     <script>
-        $(document).ready(function() {
 
+        var tender_criteria_data = @json($criteria_data);
+        var criteria_masters = @json($criteria_masters);
+        
+        $(document).ready(function() {            
+            
         });
 
         function openModalCriteriaValue(vendor_id, vendor_name) {            
             $('#modal_vendor_name').text(vendor_name);
             $('#modalCriteriaValue').modal('show');
         }
+
+
+        // CRUD Criteria Data
+        function openModalCriteriaData() {                        
+
+            $('#tender_criteria_data_body').html('');
+
+            let html = '';
+            let no = 1;
+
+            $.each(tender_criteria_data, function (key, value) { 
+                html += '<tr>';
+                html += '<td>' + no + '</td>';
+                // html += '<td>' + value.criteria_name + '</td>';
+                html += '<td>';
+                html += '<select class="form-control select2" style="width: 100%;">';
+                    $.each(criteria_masters, function (idx, val) { 
+                        if (value.criteria_code == val.criteria_code) {
+                            html += '<option value='+value.criteria_code+' selected>'+ value.criteria_name +'</option>';
+                        } else {
+                            html += '<option value='+val.criteria_code+'>'+ val.criteria_name +'</option>';
+                        }
+                    });
+
+                html += '</select>';
+
+                // html += '<td>' + value.criteria_weight + '</td>';
+                let value_percent = (value.criteria_weight * 100);
+
+                html += '<td><input class="form-control" type="number" value="'+ value_percent + '"/></td>';
+                html += '</tr>';
+
+                no++
+            });
+
+            $('#tender_criteria_data_body').html(html);
+            
+            $('#modalCriteriaData').modal('show');
+        }
+        
 
 
 
