@@ -30,9 +30,10 @@ Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () 
     Route::get('/create', [App\Http\Controllers\TenderController::class, 'create'])->name('create');
     Route::post('/store', [App\Http\Controllers\TenderController::class, 'store'])->name('store'); 
     Route::get('/edit/{id}', [App\Http\Controllers\TenderController::class, 'edit'])->name('edit');   
-    Route::delete('/delete/{id}', [App\Http\Controllers\TenderController::class, 'destroy'])->name('destroy'); 
+    Route::delete('/destroy/{id}', [App\Http\Controllers\TenderController::class, 'destroy'])->name('destroy'); 
 
     Route::get('/detail/{id}', [App\Http\Controllers\TenderDetailController::class, 'index'])->name('detail');
+    Route::delete('/delete/{id}', [App\Http\Controllers\TenderDetailController::class, 'destroy'])->name('delete');
 });
 
 Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () {

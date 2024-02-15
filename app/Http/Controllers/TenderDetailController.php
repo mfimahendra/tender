@@ -104,9 +104,22 @@ class TenderDetailController extends Controller
      * @param  \App\Models\TenderDetail  $tenderDetail
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TenderDetail $tenderDetail)
+    public function destroy($id)
     {
-        //
+        try{
+            $tender_detail = TenderDetail::where('id', '=', $id)->first();
+
+            if(!$tender_detail){
+                return redirect()->route('tender_detail', ['id' => $tender_detail -> tender_id])->with('error', 'Vendor not found.');
+            } else{
+                $tender_detail->delete();
+
+                return redirect()->route('tender.detail', ['id' => $tender_detail -> tender_id])->with('success', 'Vendor deleted successfully.');
+            }
+        } catch (\Throwable $th){
+            return redirect()->route('tender.detail', ['id' => $tender_detail->tender_id])->with('error', $th->getMessage());
+        }
+
     }
 
     public function saveCriteriaData(Request $request)
