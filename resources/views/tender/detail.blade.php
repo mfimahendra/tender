@@ -144,7 +144,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCriteriaData()">Save changes</button>
                 </div>
             </div>            
         </div>        
@@ -217,7 +217,7 @@
                 html += '<td>' + no + '</td>';
                 // html += '<td>' + value.criteria_name + '</td>';
                 html += '<td>';
-                html += '<select class="form-control select2" style="width: 100%;">';
+                html += '<select id="criteria_data" class="form-control select2" style="width: 100%;">';
                     $.each(criteria_masters, function (idx, val) { 
                         if (value.criteria_code == val.criteria_code) {
                             html += '<option value='+value.criteria_code+' selected>'+ value.criteria_name +'</option>';
@@ -241,9 +241,63 @@
             
             $('#modalCriteriaData').modal('show');
         }
-        
 
+        function saveCriteriaData() {
 
+            let criteria_data = [];
+
+            $('#tender_criteria_data_body tr').each(function() {
+                let criteria_code = $(this).find('select').val();
+                let criteria_weight = $(this).find('input').val() / 100;
+
+                let data = {
+                    criteria_code: criteria_code,
+                    criteria_weight: criteria_weight
+                };
+
+                criteria_data.push(data);
+            });
+            
+            let data = {
+                _token: "{{ csrf_token() }}",
+                tender_id: "{{ $tender->tender_id }}",
+                criteria_data: criteria_data
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "",
+                data: data,
+                success: function (response) {
+                    if (response.status == true) {
+                        $('#success-alert').html(response.message);
+                        $('#success-alert').show();
+                        setTimeout(function(){
+                            $('#success-alert').fadeOut('fast');
+                        }, 3000);
+                        setTimeout(function(){
+                            window.location.href = "{{ route('tender.detail', $tender->tender_id) }}";
+                        }, 3000);
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                    } else {
+                        $('#error-alert').html(response.message);
+                        $('#error-alert').show();
+                        setTimeout(function(){
+                            $('#error-alert').fadeOut('fast');
+                        }, 3000);
+                    }                    
+                },
+                error: function (response) {
+                    $('#error-alert').html(response.message);
+                    $('#error-alert').show();
+                    setTimeout(function(){
+                        $('#error-alert').fadeOut('fast');
+                    }, 3000);
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                }
+            });
+
+        }    
 
         $(function() {
             $("#tender_table").DataTable({

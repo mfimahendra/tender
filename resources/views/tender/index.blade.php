@@ -83,23 +83,15 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $data->tender_id }}</td>
-                                                    <td>
-                                                        <a href="{{ route('tender.detail', $data->tender_id) }}">
-                                                            {{ $data->tender_name }}
-                                                        </a>
-                                                    </td>
+                                                    <td>{{ $data->tender_name }}</td>
                                                     <td>{{ $data->tender_date }}</td>
                                                     <td>
-                                                        {{-- <form action="{{ route('vendor.destroy', $data->id) }}" method="POST">
-                                                            <a href="{{ route('vendor.edit', $data->id) }}" class="btn btn-xs btn-primary btn-flat" data-toggle="tooltip" title='Edit'>
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </form> --}}
+                                                        <a href="{{ route('tender.detail', $data->tender_id) }}" class="btn btn-xs btn-primary">
+                                                            <i class="fa fa-eye"></i> Detail
+                                                        </a>
+                                                        <a href="{{ route('tender.edit', $data->tender_id) }}" class="btn btn-xs btn-warning" data-toggle="tooltip" title='Edit'>
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </a>
                                                     </td>
                                                 </tr>
                                                 @php

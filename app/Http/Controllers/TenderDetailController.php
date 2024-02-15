@@ -108,4 +108,41 @@ class TenderDetailController extends Controller
     {
         //
     }
+
+    public function saveCriteriaData(Request $request)
+    {
+        try {
+            $tender_id = $request->tender_id;
+            $criteria_code = $request->criteria_code;
+            $vendor_id = $request->vendor_id;
+            $criteria_value = $request->criteria_value;
+
+            $criteria_data = CriteriaData::where('tender_id', '=', $tender_id)
+                ->where('criteria_code', '=', $criteria_code)
+                ->where('vendor_id', '=', $vendor_id)
+                ->first();
+
+            if ($criteria_data == null) {
+                $criteria_data = new CriteriaData();
+                $criteria_data->tender_id = $tender_id;
+                $criteria_data->criteria_code = $criteria_code;
+                $criteria_data->vendor_id = $vendor_id;
+                $criteria_data->criteria_value = $criteria_value;
+                $criteria_data->save();
+            } else {
+                $criteria_data->criteria_value = $criteria_value;
+                $criteria_data->save();
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data gagal disimpan'
+            ]);
+        }
+    }
 }

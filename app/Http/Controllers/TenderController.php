@@ -156,9 +156,33 @@ class TenderController extends Controller
      * @param  \App\Models\Tender  $tender
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tender $tender)
-    {
-        //
+    public function edit($tender_id)
+    {                        
+        try {            
+            $tender = Tender::where('tender_id', '=', $tender_id)->first();
+
+            if ($tender == null) {
+                abort(404);
+            }
+
+            $vendor_lists = Vendor::get();
+            
+            $vendor_selected = TenderDetail::where('tender_id', '=', $tender_id)
+            ->join('vendors', 'tender_details.vendor_id', '=', 'vendors.vendor_id')
+            ->select('tender_details.*', 'vendors.vendor_name')
+            ->get();
+
+            $vendor_unselected = Vendor::whereNotIn('vendor_id', $vendor_selected->pluck('vendor_id'))->get();        
+
+            return view ('tender.edit', [
+                'tender'=>$tender,
+                'vendor_lists' => $vendor_lists,
+                'vendor_selected' => $vendor_selected,
+                'vendor_unselected' => $vendor_unselected
+            ]);
+        } catch (\Throwable $e) {
+            abort(404);
+        }
     }
 
     /**
