@@ -8,6 +8,7 @@ use App\Models\Criteria;
 use App\Models\CriteriaData;
 use App\Models\CriteriaValue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TenderDetailController extends Controller
 {
@@ -110,38 +111,43 @@ class TenderDetailController extends Controller
     }
 
     public function saveCriteriaData(Request $request)
-    {
+    {        
+        DB::beginTransaction();
         try {
-            $tender_id = $request->tender_id;
-            $criteria_code = $request->criteria_code;
-            $vendor_id = $request->vendor_id;
-            $criteria_value = $request->criteria_value;
+            $tender_id = $request->tender_id;                        
+            $criteria_data = $request->criteria_data;
 
-            $criteria_data = CriteriaData::where('tender_id', '=', $tender_id)
-                ->where('criteria_code', '=', $criteria_code)
-                ->where('vendor_id', '=', $vendor_id)
-                ->first();
+            $master_criteria = Criteria::get();
 
-            if ($criteria_data == null) {
-                $criteria_data = new CriteriaData();
-                $criteria_data->tender_id = $tender_id;
-                $criteria_data->criteria_code = $criteria_code;
-                $criteria_data->vendor_id = $vendor_id;
-                $criteria_data->criteria_value = $criteria_value;
-                $criteria_data->save();
-            } else {
-                $criteria_data->criteria_value = $criteria_value;
-                $criteria_data->save();
+            // foreach set criteria_code from criteria_data as key then add criteria_type from master criteria to criteria_data array
+            foreach ($criteria_data as $key => $value) {
+                $criteria_data[$key]['criteria_type'] = $master_criteria->where('criteria_code', $value['criteria_code'])->first()->criteria_type;
             }
 
+            CriteriaData::where('tender_id', '=', $tender_id)->delete();
+
+            foreach ($criteria_data as $key => $value) {                
+                $criteria_first = CriteriaData::insert([
+                    'tender_id' => $tender_id,
+                    'criteria_code' => $value['criteria_code'],
+                    'criteria_weight' => $value['criteria_weight'],                    
+                    'criteria_type' => $value['criteria_type'],
+                    'remark' => null,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
+            }            
+
+            DB::commit();
             return response()->json([
-                'status' => 'success',
+                'status' => true,
                 'message' => 'Data berhasil disimpan'
             ]);
         } catch (\Throwable $e) {
+            DB::rollback();
             return response()->json([
-                'status' => 'error',
-                'message' => 'Data gagal disimpan'
+                'status' => false,
+                'message' => 'Data gagal disimpan' . $e->getMessage()
             ]);
         }
     }

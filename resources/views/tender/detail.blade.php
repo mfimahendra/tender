@@ -129,13 +129,15 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">                                        
+                <div class="modal-body">
+                    
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Kriteria</th>
                                 <th>Bobot Kriteria</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="tender_criteria_data_body">
@@ -212,6 +214,28 @@
             let html = '';
             let no = 1;
 
+            if (tender_criteria_data.length == 0) {
+                html += '<tr>';
+                html += '<td>' + no + '</td>';
+                html += '<td>';
+                html += '<select id="criteria_data" class="form-control select2" style="width: 100%;">';
+                    html += '<option value="">-- Pilih Kriteria --</option>';
+                    $.each(criteria_masters, function (idx, val) { 
+                        html += '<option value='+val.criteria_code+'>'+ val.criteria_name +'</option>';
+                    });
+                html += '</select>';
+                html += '</td>';
+                html += '<td><input class="form-control" type="number" value="0"/></td>';
+                html += '<td>';
+                html += '<div class="btn-group">';                    
+                    html += '<button class="btn btn-sm btn-info" onclick="addCriteriaData()">';
+                    html += '<i class="fas fa-plus"></i>';
+                    html += '</button>';
+                html += '</div>';
+                html += '</td>';
+                html += '</tr>';
+            }
+
             $.each(tender_criteria_data, function (key, value) { 
                 html += '<tr>';
                 html += '<td>' + no + '</td>';
@@ -232,6 +256,19 @@
                 let value_percent = (value.criteria_weight * 100);
 
                 html += '<td><input class="form-control" type="number" value="'+ value_percent + '"/></td>';
+
+                html += '<td>';
+                html += '<div class="btn-group">';
+                    html += '<button class="btn btn-sm btn-warning" onclick="deleteCriteriaData('+no+')">';
+                    html += '<i class="fas fa-minus"></i>';
+                    html += '</button>';
+                    html += '<button class="btn btn-sm btn-info" onclick="addCriteriaData()">';
+                    html += '<i class="fas fa-plus"></i>';
+                    html += '</button>';
+                html += '</div>';
+                html += '</td>';                                    
+
+
                 html += '</tr>';
 
                 no++
@@ -240,6 +277,40 @@
             $('#tender_criteria_data_body').html(html);
             
             $('#modalCriteriaData').modal('show');
+        }
+
+        function addCriteriaData() {
+            let html = '';
+            let no = $('#tender_criteria_data_body tr').length + 1;
+
+            html += '<tr>';
+            html += '<td>' + no + '</td>';
+            html += '<td>';
+            html += '<select id="criteria_data" class="form-control select2" style="width: 100%;">';
+                html += '<option value="">-- Pilih Kriteria --</option>';
+                $.each(criteria_masters, function (idx, val) { 
+                    html += '<option value='+val.criteria_code+'>'+ val.criteria_name +'</option>';
+                });
+            html += '</select>';
+            html += '</td>';
+            html += '<td><input class="form-control" type="number" value="0"/></td>';
+            html += '<td>';
+            html += '<div class="btn-group">';
+                html += '<button class="btn btn-sm btn-warning" onclick="deleteCriteriaData('+no+')">';
+                html += '<i class="fas fa-minus"></i>';
+                html += '</button>';
+                html += '<button class="btn btn-sm btn-info" onclick="addCriteriaData()">';
+                html += '<i class="fas fa-plus"></i>';
+                html += '</button>';
+            html += '</div>';
+            html += '</td>';
+            html += '</tr>';
+
+            $('#tender_criteria_data_body').append(html);
+        }
+
+        function deleteCriteriaData(no) {            
+            $('#tender_criteria_data_body tr').eq(no - 1).remove();
         }
 
         function saveCriteriaData() {
@@ -266,9 +337,10 @@
 
             $.ajax({
                 type: "POST",
-                url: "",
+                url: "{{ route('tender.criteria_data.save') }}",
                 data: data,
                 success: function (response) {
+                    console.log(response);
                     if (response.status == true) {
                         $('#success-alert').html(response.message);
                         $('#success-alert').show();

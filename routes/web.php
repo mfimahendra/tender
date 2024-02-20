@@ -33,6 +33,9 @@ Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () 
     Route::delete('/delete/{id}', [App\Http\Controllers\TenderController::class, 'destroy'])->name('destroy'); 
 
     Route::get('/detail/{id}', [App\Http\Controllers\TenderDetailController::class, 'index'])->name('detail');
+
+    // Detail Criteria Data
+    Route::post('/criteria_data/store', [App\Http\Controllers\TenderDetailController::class, 'saveCriteriaData'])->name('criteria_data.save');
 });
 
 Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () {

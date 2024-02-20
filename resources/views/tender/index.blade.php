@@ -20,11 +20,7 @@
                         <i class="fa fa-plus"></i>&nbsp;
                         Create Tender
                     </button>
-                </a>
-                <button class="btn btn btn-info btn-sm float-right mr-1">
-                    <i class="fas fa-file-alt"></i>&nbsp;
-                    Add Criteria
-                </button>
+                </a>                
             </div>
         </div>
     </div>
