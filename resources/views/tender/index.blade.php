@@ -88,6 +88,13 @@
                                                         <a href="{{ route('tender.edit', $data->tender_id) }}" class="btn btn-xs btn-warning" data-toggle="tooltip" title='Edit'>
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
+                                                        <form action="{{ route('tender.destroy', $data->tender_id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
+                                                                <i class="fa fa-trash"></i> Delete
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                                 @php

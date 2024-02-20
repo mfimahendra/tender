@@ -30,12 +30,16 @@ Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () 
     Route::get('/create', [App\Http\Controllers\TenderController::class, 'create'])->name('create');
     Route::post('/store', [App\Http\Controllers\TenderController::class, 'store'])->name('store'); 
     Route::get('/edit/{id}', [App\Http\Controllers\TenderController::class, 'edit'])->name('edit');   
-    Route::delete('/delete/{id}', [App\Http\Controllers\TenderController::class, 'destroy'])->name('destroy'); 
+    Route::delete('/destroy/{id}', [App\Http\Controllers\TenderController::class, 'destroy'])->name('destroy'); 
 
     Route::get('/detail/{id}', [App\Http\Controllers\TenderDetailController::class, 'index'])->name('detail');
+<<<<<<< HEAD
 
     // Detail Criteria Data
     Route::post('/criteria_data/store', [App\Http\Controllers\TenderDetailController::class, 'saveCriteriaData'])->name('criteria_data.save');
+=======
+    Route::delete('/delete/{id}', [App\Http\Controllers\TenderDetailController::class, 'destroy'])->name('delete');
+>>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
 });
 
 Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () {

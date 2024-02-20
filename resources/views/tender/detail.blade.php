@@ -39,7 +39,7 @@
             <div id="error-alert" class="alert alert-danger">
                 {{ session('error') }}
             </div>
-        @endif        
+        @endif
         @if (count($criteria_data) == 0)
             <div id="warning-alert" class="alert alert-warning">
                 <b>Warning!</b> Kriteria belum ditambahkan!!!
@@ -93,16 +93,28 @@
                                                     <td>{{ $data->vendor_name }}</td>
                                                     <td>{{ $data->remark }}</td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="openModalCriteriaValue('{{ $data->vendor_id }}', '{{ $data->vendor_name }}')">
+                                                        <button class="btn btn-sm btn-primary"
+                                                            onclick="openModalCriteriaValue('{{ $data->vendor_id }}', '{{ $data->vendor_name }}')">
                                                             <i class="fas fa-star"></i>&nbsp;
                                                             {{ $data->score }}
                                                         </button>
                                                     </td>
                                                     <td>{{ $data->date }}</td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-info">
-                                                            <i class="fas fa-edit"></i>&nbsp;
-                                                            Edit
+                                                        <a href="#" class="btn btn-xs btn-warning"
+                                                            data-toggle="tooltip" title='Edit'>
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                        <form action="{{ route('tender.delete', $data->id) }}"
+                                                            method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-xs btn-danger btn-flat show_confirm"
+                                                                data-toggle="tooltip" title='Delete'>
+                                                                <i class="fa fa-trash"></i> Delete
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                                 @php
@@ -130,7 +142,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
+<<<<<<< HEAD
                     
+=======
+>>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                     <table class="table">
                         <thead>
                             <tr>
@@ -148,8 +163,8 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" onclick="saveCriteriaData()">Save changes</button>
                 </div>
-            </div>            
-        </div>        
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="modalCriteriaValue">
@@ -168,10 +183,9 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
-            </div>            
-        </div>        
+            </div>
+        </div>
     </div>
-    
 @endsection
 
 @section('scripts')
@@ -192,28 +206,28 @@
     <script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js') }}"></script>
 
     <script>
-
         var tender_criteria_data = @json($criteria_data);
         var criteria_masters = @json($criteria_masters);
-        
-        $(document).ready(function() {            
-            
+
+        $(document).ready(function() {
+
         });
 
-        function openModalCriteriaValue(vendor_id, vendor_name) {            
+        function openModalCriteriaValue(vendor_id, vendor_name) {
             $('#modal_vendor_name').text(vendor_name);
             $('#modalCriteriaValue').modal('show');
         }
 
 
         // CRUD Criteria Data
-        function openModalCriteriaData() {                        
+        function openModalCriteriaData() {
 
             $('#tender_criteria_data_body').html('');
 
             let html = '';
             let no = 1;
 
+<<<<<<< HEAD
             if (tender_criteria_data.length == 0) {
                 html += '<tr>';
                 html += '<td>' + no + '</td>';
@@ -237,24 +251,30 @@
             }
 
             $.each(tender_criteria_data, function (key, value) { 
+=======
+            $.each(tender_criteria_data, function(key, value) {
+>>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                 html += '<tr>';
                 html += '<td>' + no + '</td>';
                 // html += '<td>' + value.criteria_name + '</td>';
                 html += '<td>';
                 html += '<select id="criteria_data" class="form-control select2" style="width: 100%;">';
-                    $.each(criteria_masters, function (idx, val) { 
-                        if (value.criteria_code == val.criteria_code) {
-                            html += '<option value='+value.criteria_code+' selected>'+ value.criteria_name +'</option>';
-                        } else {
-                            html += '<option value='+val.criteria_code+'>'+ val.criteria_name +'</option>';
-                        }
-                    });
+                $.each(criteria_masters, function(idx, val) {
+                    if (value.criteria_code == val.criteria_code) {
+                        html += '<option value=' + value.criteria_code + ' selected>' + value
+                            .criteria_name + '</option>';
+                    } else {
+                        html += '<option value=' + val.criteria_code + '>' + val.criteria_name +
+                        '</option>';
+                    }
+                });
 
                 html += '</select>';
 
                 // html += '<td>' + value.criteria_weight + '</td>';
                 let value_percent = (value.criteria_weight * 100);
 
+<<<<<<< HEAD
                 html += '<td><input class="form-control" type="number" value="'+ value_percent + '"/></td>';
 
                 html += '<td>';
@@ -269,13 +289,16 @@
                 html += '</td>';                                    
 
 
+=======
+                html += '<td><input class="form-control" type="number" value="' + value_percent + '"/></td>';
+>>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                 html += '</tr>';
 
                 no++
             });
 
             $('#tender_criteria_data_body').html(html);
-            
+
             $('#modalCriteriaData').modal('show');
         }
 
@@ -328,7 +351,7 @@
 
                 criteria_data.push(data);
             });
-            
+
             let data = {
                 _token: "{{ csrf_token() }}",
                 tender_id: "{{ $tender->tender_id }}",
@@ -339,37 +362,45 @@
                 type: "POST",
                 url: "{{ route('tender.criteria_data.save') }}",
                 data: data,
+<<<<<<< HEAD
                 success: function (response) {
                     console.log(response);
+=======
+                success: function(response) {
+>>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                     if (response.status == true) {
                         $('#success-alert').html(response.message);
                         $('#success-alert').show();
-                        setTimeout(function(){
+                        setTimeout(function() {
                             $('#success-alert').fadeOut('fast');
                         }, 3000);
-                        setTimeout(function(){
+                        setTimeout(function() {
                             window.location.href = "{{ route('tender.detail', $tender->tender_id) }}";
                         }, 3000);
-                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                        $("html, body").animate({
+                            scrollTop: 0
+                        }, "slow");
                     } else {
                         $('#error-alert').html(response.message);
                         $('#error-alert').show();
-                        setTimeout(function(){
+                        setTimeout(function() {
                             $('#error-alert').fadeOut('fast');
                         }, 3000);
-                    }                    
+                    }
                 },
-                error: function (response) {
+                error: function(response) {
                     $('#error-alert').html(response.message);
                     $('#error-alert').show();
-                    setTimeout(function(){
+                    setTimeout(function() {
                         $('#error-alert').fadeOut('fast');
                     }, 3000);
-                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                    $("html, body").animate({
+                        scrollTop: 0
+                    }, "slow");
                 }
             });
 
-        }    
+        }
 
         $(function() {
             $("#tender_table").DataTable({
@@ -387,7 +418,9 @@
 
 
         var areaChartData = {
-            labels: ['Garansi', 'Pengalaman Pekerjaan', 'Harga Penawaran', 'Waktu Pengerjaan', 'Jumlah Karyawan', 'Toleransi Pembayaran'],
+            labels: ['Garansi', 'Pengalaman Pekerjaan', 'Harga Penawaran', 'Waktu Pengerjaan', 'Jumlah Karyawan',
+                'Toleransi Pembayaran'
+            ],
             datasets: [{
                     label: 'Digital Goods',
                     backgroundColor: 'rgba(60,141,188,0.9)',

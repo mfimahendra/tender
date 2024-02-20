@@ -203,8 +203,26 @@ class TenderController extends Controller
      * @param  \App\Models\Tender  $tender
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tender $tender)
+    public function destroy($tender_id)
     {
-        //
+        try {
+            $tender = Tender::where('tender_id', '=', $tender_id)->first();
+            $tender_detail = TenderDetail::where('tender_id', '=', $tender_id)->get();
+
+            if (!$tender) {
+                return redirect()->route('tender.index')->with('error', 'tender not found.');
+            } else{
+                $tender->delete();
+                
+                foreach ($tender_detail as $detail) {
+                    $detail->delete();
+                }
+
+                return redirect()->route('tender.index')->with('success', 'tender deleted successfully.');
+            }
+
+        } catch (\Throwable $th) {
+            return redirect()->route('tender.index')->with('error', $th->getMessage());
+        }
     }
 }
