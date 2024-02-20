@@ -227,7 +227,6 @@
             let html = '';
             let no = 1;
 
-<<<<<<< HEAD
             if (tender_criteria_data.length == 0) {
                 html += '<tr>';
                 html += '<td>' + no + '</td>';
@@ -251,9 +250,6 @@
             }
 
             $.each(tender_criteria_data, function (key, value) { 
-=======
-            $.each(tender_criteria_data, function(key, value) {
->>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                 html += '<tr>';
                 html += '<td>' + no + '</td>';
                 // html += '<td>' + value.criteria_name + '</td>';
@@ -274,7 +270,6 @@
                 // html += '<td>' + value.criteria_weight + '</td>';
                 let value_percent = (value.criteria_weight * 100);
 
-<<<<<<< HEAD
                 html += '<td><input class="form-control" type="number" value="'+ value_percent + '"/></td>';
 
                 html += '<td>';
@@ -289,9 +284,6 @@
                 html += '</td>';                                    
 
 
-=======
-                html += '<td><input class="form-control" type="number" value="' + value_percent + '"/></td>';
->>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                 html += '</tr>';
 
                 no++
@@ -361,13 +353,8 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('tender.criteria_data.save') }}",
-                data: data,
-<<<<<<< HEAD
-                success: function (response) {
-                    console.log(response);
-=======
+                data: data,                
                 success: function(response) {
->>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
                     if (response.status == true) {
                         $('#success-alert').html(response.message);
                         $('#success-alert').show();
