@@ -27,8 +27,8 @@ class TenderDetailController extends Controller
 
         $criteria_data = CriteriaData::where('tender_id', '=', $tender_id)
             ->join('criteria_masters', 'criteria_masters.criteria_code', '=', 'criteria_details.criteria_code')
-            ->select('criteria_details.*', 'criteria_masters.criteria_name')
-            ->get();
+            ->select('criteria_details.*', 'criteria_masters.criteria_name', 'criteria_masters.uom')
+            ->get();        
         
         $criteria_values = CriteriaValue::where('tender_id', '=', $tender_id)->get();
 

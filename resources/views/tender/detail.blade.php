@@ -141,11 +141,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-<<<<<<< HEAD
-                    
-=======
->>>>>>> 08d09ac68d1c08a54fd5d57411140e6e6c94d5a1
+                <div class="modal-body">                    
                     <table class="table">
                         <thead>
                             <tr>
@@ -177,7 +173,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Table Score&hellip;</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kriteria</th>                                
+                                <th>Nilai</th>                                
+                            </tr>
+                        </thead>
+                        <tbody id="vendor_criteria_value_data_body">
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -215,6 +221,24 @@
 
         function openModalCriteriaValue(vendor_id, vendor_name) {
             $('#modal_vendor_name').text(vendor_name);
+
+            $('#vendor_criteria_value_data_body').html('');
+
+            let html = '';
+            let no = 1;
+
+            $.each(tender_criteria_data, function (key, value) { 
+                html += '<tr>';
+                html += '<td>' + no + '</td>';
+                html += '<td>' + value.criteria_name + ' ('+ value.uom +')' + '</td>';                
+                html += '<td><input class="form-control" type="number" placeholder="Insert value" required/></td>';
+                html += '</tr>';
+
+                no++
+            });
+
+            $('#vendor_criteria_value_data_body').html(html);
+
             $('#modalCriteriaValue').modal('show');
         }
 
