@@ -164,4 +164,29 @@ class TenderDetailController extends Controller
             ]);
         }
     }
+
+    public function fetchAllCriteriaValuesByTenderId($tender_id)
+    {
+        try {
+            $criteria_values = CriteriaValue::where('tender_id', '=', $tender_id)->get();
+            
+            $response = [
+                'status' => true,
+                'message' => 'Data berhasil diambil',
+                'data' => $criteria_values
+            ];
+
+            return response()->json($response);
+
+        } catch (\Throwable $e) {
+            
+            $response = [
+                'status' => false,
+                'message' => 'Data gagal diambil' . $e->getMessage(),                
+            ];
+
+            return response()->json($response);
+        }
+        
+    }    
 }

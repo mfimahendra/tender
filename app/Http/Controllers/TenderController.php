@@ -19,8 +19,7 @@ class TenderController extends Controller
      */
     public function index()
     {
-        $tender_lists = Tender::where('status', '=', 'active')
-        ->get();
+        $tender_lists = Tender::where('status', '=', 'active')->get();
 
         return view ('tender.index', [
             'tender_lists' => $tender_lists,
@@ -224,5 +223,5 @@ class TenderController extends Controller
         } catch (\Throwable $th) {
             return redirect()->route('tender.index')->with('error', $th->getMessage());
         }
-    }
+    }    
 }

@@ -24,6 +24,10 @@
                     <i class="fas fa-file-alt"></i>&nbsp;
                     Criteria Data
                 </button>
+                <button class="btn btn-sm btn-primary float-right mr-1" onclick="openModalCriteriaData()">
+                    <i class="fas fa-star"></i>&nbsp;
+                    Scoring
+                </button>
             </div>
         </div>
     </div>
@@ -50,24 +54,62 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-10">
-                                <div class="chart">
-                                    <canvas id="stackedBarChart" style="height: 350px; max-width: 100%;"></canvas>
+                            <div class="card card-primary card-outline card-outline-tabs">
+                                <div class="card-header p-0 border-bottom-0">
+                                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="custom-tabs-four-graph-tab" data-toggle="pill" href="#custom-tabs-four-graph" role="tab" aria-controls="custom-tabs-four-graph" aria-selected="true">Grafik</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-four-table-tab" data-toggle="pill" href="#custom-tabs-four-table" role="tab" aria-controls="custom-tabs-four-table" aria-selected="false">Tabel</a>
+                                        </li>                                        
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="col-2">
-                                <table id="criteria_table" class="table table-sm table-bordered table-hover">
-                                    <tr>
-                                        <th colspan="2" style="text-align: center;">Tabel Kriteria</th>
-                                    </tr>
-                                    @foreach ($criteria_data as $ct_data)
-                                        <tr>
-                                            <td>{{ $ct_data->criteria_name }}</td>
-                                            <td>{{ $ct_data->criteria_weight }}</td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                            </div>
+                                <div class="card-body">
+                                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                                        <div class="tab-pane fade show active" id="custom-tabs-four-graph" role="tabpanel" aria-labelledby="custom-tabs-four-graph-tab">
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <div class="chart">
+                                                        <canvas id="stackedBarChart" style="height: 350px; max-width: 100%;"></canvas>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <table id="criteria_table" class="table table-sm table-bordered table-hover" style="font-size: 14px;">
+                                                        <tr>
+                                                            <th colspan="2" style="text-align: center;">Tabel Kriteria</th>
+                                                        </tr>
+                                                        @foreach ($criteria_data as $ct_data)
+                                                            <tr>
+                                                                <td>{{ $ct_data->criteria_name }}</td>
+                                                                <td>{{ $ct_data->criteria_weight }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-four-table" role="tabpanel" aria-labelledby="custom-tabs-four-table-tab">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <table id="criteria_table" class="table table-sm table-bordered table-hover" style="font-size: 14px;">
+                                                        <tr>
+                                                            <th colspan="2" style="text-align: center;">Tabel Kriteria</th>
+                                                        </tr>
+                                                        @foreach ($criteria_data as $ct_data)
+                                                            <tr>
+                                                                <td>{{ $ct_data->criteria_name }}</td>
+                                                                <td>{{ $ct_data->criteria_weight }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>                            
                         </div>
                         <div class="row">
                             <div class="col-12">
@@ -93,25 +135,20 @@
                                                     <td>{{ $data->vendor_name }}</td>
                                                     <td>{{ $data->remark }}</td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-primary"
-                                                            onclick="openModalCriteriaValue('{{ $data->vendor_id }}', '{{ $data->vendor_name }}')">
+                                                        <button class="btn btn-sm bg-orange" onclick="openModalCriteriaValue('{{ $data->vendor_id }}', '{{ $data->vendor_name }}')">
                                                             <i class="fas fa-star"></i>&nbsp;
                                                             {{ $data->score }}
                                                         </button>
                                                     </td>
                                                     <td>{{ $data->date }}</td>
                                                     <td>
-                                                        <a href="#" class="btn btn-xs btn-warning"
-                                                            data-toggle="tooltip" title='Edit'>
+                                                        <a href="#" class="btn btn-xs btn-warning" data-toggle="tooltip" title='Edit'>
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
-                                                        <form action="{{ route('tender.delete', $data->id) }}"
-                                                            method="POST" class="d-inline">
+                                                        <form action="{{ route('tender.delete', $data->id) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-xs btn-danger btn-flat show_confirm"
-                                                                data-toggle="tooltip" title='Delete'>
+                                                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
                                                                 <i class="fa fa-trash"></i> Delete
                                                             </button>
                                                         </form>
@@ -142,10 +179,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <span id="criteria_data_percentage_container" class="btn btn-sm bg-info float-left">
+                        Total :
+                        <span id="criteria_data_percentage_counter">10</span>&nbsp;%
+                    </span>
+
                     <button class="btn btn-success btn-sm float-right mb-2" onclick="addCriteriaData()">
                         <i class="fas fa-plus"></i>
                         Tambah
-
                     </button>
                     <table class="table">
                         <thead>
@@ -211,7 +252,7 @@
         var criteria_masters = @json($criteria_masters);
 
         $(document).ready(function() {
-
+            getDataChart();
         });
 
         function openModalCriteriaValue(vendor_id, vendor_name) {
@@ -228,29 +269,7 @@
             let html = '';
             let no = 1;
 
-            // if (tender_criteria_data.length == 0) {
-            //     html += '<tr>';
-            //     html += '<td>' + no + '</td>';
-            //     html += '<td>';
-            //     html += '<select id="criteria_data" class="form-control select2" style="width: 100%;">';
-            //         html += '<option value="">-- Pilih Kriteria --</option>';
-            //         $.each(criteria_masters, function (idx, val) { 
-            //             html += '<option value='+val.criteria_code+'>'+ val.criteria_name +'</option>';
-            //         });
-            //     html += '</select>';
-            //     html += '</td>';
-            //     html += '<td><input class="form-control" type="number" value="0"/></td>';
-            //     html += '<td>';
-            //     html += '<div class="btn-group">';                    
-            //         html += '<button class="btn btn-sm btn-info" onclick="addCriteriaData()">';
-            //         html += '<i class="fas fa-plus"></i>';
-            //         html += '</button>';
-            //     html += '</div>';
-            //     html += '</td>';
-            //     html += '</tr>';
-            // }
-
-            $.each(tender_criteria_data, function (key, value) { 
+            $.each(tender_criteria_data, function(key, value) {
                 html += '<tr>';
                 html += '<td>' + no + '</td>';
                 // html += '<td>' + value.criteria_name + '</td>';
@@ -262,7 +281,7 @@
                             .criteria_name + '</option>';
                     } else {
                         html += '<option value=' + val.criteria_code + '>' + val.criteria_name +
-                        '</option>';
+                            '</option>';
                     }
                 });
 
@@ -271,18 +290,18 @@
                 // html += '<td>' + value.criteria_weight + '</td>';
                 let value_percent = (value.criteria_weight * 100);
 
-                html += '<td><input class="form-control" type="number" value="'+ value_percent + '"/></td>';
+                html += '<td><input class="form-control criteria_data_input" type="number" value="' + value_percent + '"/></td>';
 
                 html += '<td>';
                 // html += '<div class="btn-group">';
-                    html += '<button class="btn btn-sm btn-warning" onclick="deleteCriteriaData('+no+')">';
-                    html += '<i class="fas fa-minus"></i>';
-                    html += '</button>';
-                    // html += '<button class="btn btn-sm btn-info" onclick="addCriteriaData()">';
-                    // html += '<i class="fas fa-plus"></i>';
-                    // html += '</button>';
+                html += '<button class="btn btn-sm btn-warning" onclick="deleteCriteriaData(' + no + ')">';
+                html += '<i class="fas fa-minus"></i>';
+                html += '</button>';
+                // html += '<button class="btn btn-sm btn-info" onclick="addCriteriaData()">';
+                // html += '<i class="fas fa-plus"></i>';
+                // html += '</button>';
                 // html += '</div>';
-                html += '</td>';                                    
+                html += '</td>';
 
 
                 html += '</tr>';
@@ -292,6 +311,19 @@
 
             $('#tender_criteria_data_body').html(html);
 
+            // criteria_data_percentage_counter
+            let total = 0;
+            $('.criteria_data_input').each(function() {
+                total += parseInt($(this).val());
+            });
+
+            $('#criteria_data_percentage_counter').text(total);
+
+            $('.criteria_data_input').on('input', function() {
+                renderCriteriaDataPercentage();
+            });
+
+
             $('#modalCriteriaData').modal('show');
         }
 
@@ -300,38 +332,79 @@
             let no = $('#tender_criteria_data_body tr').length;
 
             html += '<tr>';
-            
+
             let idx = no + 1
 
             html += '<td>' + idx + '</td>';
             html += '<td>';
             html += '<select id="criteria_data" class="form-control select2" style="width: 100%;">';
-                html += '<option value="">-- Pilih Kriteria --</option>';
-                $.each(criteria_masters, function (idx, val) { 
-                    html += '<option value='+val.criteria_code+'>'+ val.criteria_name +'</option>';
-                });
+            html += '<option value="">-- Pilih Kriteria --</option>';
+            $.each(criteria_masters, function(idx, val) {
+                html += '<option value=' + val.criteria_code + '>' + val.criteria_name + '</option>';
+            });
             html += '</select>';
             html += '</td>';
-            html += '<td><input class="form-control" type="number" value="0"/></td>';
-            html += '<td>';            
-                html += '<button class="btn btn-sm btn-warning" onclick="deleteCriteriaData('+no+')">';
-                html += '<i class="fas fa-minus"></i>';
-                html += '</button>';
+            html += '<td><input class="form-control criteria_data_input" type="number" value="0"/></td>';
+            html += '<td>';
+            html += '<button class="btn btn-sm btn-warning" onclick="deleteCriteriaData(' + no + ')">';
+            html += '<i class="fas fa-minus"></i>';
+            html += '</button>';
             html += '</td>';
             html += '</tr>';
 
             $('#tender_criteria_data_body').append(html);
 
             no++;
+
+            $('.criteria_data_input').on('input', function() {
+                renderCriteriaDataPercentage();
+            });
         }
 
-        function deleteCriteriaData(no) {            
+        function renderCriteriaDataPercentage() {
+            let total = 0;
+            $('.criteria_data_input').each(function() {
+                total += parseInt($(this).val());
+            });
+
+            // criteria_data_percentage_container
+            // if 100 green, if > 100 red and < 100 yellow
+            if (total == 100) {
+                $('#criteria_data_percentage_container').removeClass('bg-warning');
+                $('#criteria_data_percentage_container').removeClass('bg-danger');
+                $('#criteria_data_percentage_container').addClass('bg-success');
+            } else if (total > 100) {
+                $('#criteria_data_percentage_container').removeClass('bg-warning');
+                $('#criteria_data_percentage_container').removeClass('bg-success');
+                $('#criteria_data_percentage_container').addClass('bg-danger');
+            } else {
+                $('#criteria_data_percentage_container').removeClass('bg-danger');
+                $('#criteria_data_percentage_container').removeClass('bg-success');
+                $('#criteria_data_percentage_container').addClass('bg-warning');
+            }
+
+            $('#criteria_data_percentage_counter').text(total);
+        }
+
+        function deleteCriteriaData(no) {
             $('#tender_criteria_data_body tr').eq(no - 1).remove();
 
-            // TODO Conditional If 
+            renderCriteriaDataPercentage();
         }
 
         function saveCriteriaData() {
+
+            // Prevent not 100%
+            let total = 0;
+
+            $('.criteria_data_input').each(function() {
+                total += parseInt($(this).val());
+            });
+
+            if (total != 100) {
+                alert('Total Bobot Kriteria harus 100%, tidak boleh kurang atau lebih dari 100%');
+                return;
+            }
 
             let criteria_data = [];
 
@@ -356,7 +429,7 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('tender.criteria_data.save') }}",
-                data: data,                
+                data: data,
                 success: function(response) {
                     if (response.status == true) {
                         $('#success-alert').html(response.message);
@@ -392,6 +465,73 @@
 
         }
 
+
+        function getDataChart() {
+
+            let label_data = [];
+            let datasets = [];
+
+            for (let i = 0; i < tender_criteria_data.length; i++) {
+                label_data.push(tender_criteria_data[i].criteria_name);
+            }
+
+            $.get("{{ route('tender.criteria_values.fetchAllCriteriaValuesByTenderId', $tender->tender_id) }}", function(response) {
+                console.log(response);
+            });
+
+
+            var areaChartData = {
+                labels: label_data,
+                // datasets: 
+                // datasets: [{
+                //         label: 'Digital Goods',
+                //         backgroundColor: 'rgba(60,141,188,0.9)',
+                //         borderColor: 'rgba(60,141,188,0.8)',
+                //         pointRadius: false,
+                //         pointColor: '#3b8bba',
+                //         pointStrokeColor: 'rgba(60,141,188,1)',
+                //         pointHighlightFill: '#fff',
+                //         pointHighlightStroke: 'rgba(60,141,188,1)',
+                //         data: [28, 48, 40, 19, 86, 27]
+                //     },
+                //     {
+                //         label: 'Electronics',
+                //         backgroundColor: 'rgba(210, 214, 222, 1)',
+                //         borderColor: 'rgba(210, 214, 222, 1)',
+                //         pointRadius: false,
+                //         pointColor: 'rgba(210, 214, 222, 1)',
+                //         pointStrokeColor: '#c1c7d1',
+                //         pointHighlightFill: '#fff',
+                //         pointHighlightStroke: 'rgba(220,220,220,1)',
+                //         data: [65, 59, 80, 81, 56, 55]
+                //     },
+                // ]
+            }
+
+            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+            var stackedBarChartData = $.extend(true, {}, areaChartData)
+
+            var stackedBarChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+
+            new Chart(stackedBarChartCanvas, {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            })
+
+        }
+
         $(function() {
             $("#tender_table").DataTable({
                 "responsive": true,
@@ -405,57 +545,5 @@
             $('#success-alert').fadeOut('fast');
             $('#error-alert').fadeOut('fast');
         }, 3000); // Durasi tampilan alert dalam milidetik (3000ms = 3 detik)        
-
-
-        var areaChartData = {
-            labels: ['Garansi', 'Pengalaman Pekerjaan', 'Harga Penawaran', 'Waktu Pengerjaan', 'Jumlah Karyawan',
-                'Toleransi Pembayaran'
-            ],
-            datasets: [{
-                    label: 'Digital Goods',
-                    backgroundColor: 'rgba(60,141,188,0.9)',
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: [28, 48, 40, 19, 86, 27]
-                },
-                {
-                    label: 'Electronics',
-                    backgroundColor: 'rgba(210, 214, 222, 1)',
-                    borderColor: 'rgba(210, 214, 222, 1)',
-                    pointRadius: false,
-                    pointColor: 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: [65, 59, 80, 81, 56, 55]
-                },
-            ]
-        }
-
-        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-        var stackedBarChartData = $.extend(true, {}, areaChartData)
-
-        var stackedBarChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
-            }
-        }
-
-        new Chart(stackedBarChartCanvas, {
-            type: 'bar',
-            data: stackedBarChartData,
-            options: stackedBarChartOptions
-        })
     </script>
 @endsection
