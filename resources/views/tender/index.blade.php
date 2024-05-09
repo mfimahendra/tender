@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-
 @endsection
 
 @section('content-header')
@@ -20,7 +19,7 @@
                         <i class="fa fa-plus"></i>&nbsp;
                         Create Tender
                     </button>
-                </a>                
+                </a>
             </div>
         </div>
     </div>
@@ -35,81 +34,69 @@
         @elseif(session('error'))
             <div id="error-alert" class="alert alert-danger">
                 {{ session('error') }}
-            </div>        
+            </div>
         @endif
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="row">
-                                    <table>
-                                        <tr>
-                                            
-                                        </tr>
-                                    </table>
-                                </div>
-
-                            </div>
-                            <div class="col-9"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card-body table-responsive p-0" style="height: 300px;">
-                                    <table id="tender_table" class="table table-head-fixed text-nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>ID</th>
-                                                <th>Tender Name</th>
-                                                <th>Date</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $no = 1;
-                                            @endphp
-                                            @foreach ($tender_lists as $data)
-                                                <tr>
-                                                    <td>{{ $no }}</td>
-                                                    <td>{{ $data->tender_id }}</td>
-                                                    <td>{{ $data->tender_name }}</td>
-                                                    <td>{{ $data->tender_date }}</td>
-                                                    <td>
-                                                        <a href="{{ route('tender.detail', $data->tender_id) }}" class="btn btn-xs btn-primary">
-                                                            <i class="fa fa-eye"></i> Detail
-                                                        </a>
-                                                        <a href="{{ route('tender.edit', $data->tender_id) }}" class="btn btn-xs btn-warning" data-toggle="tooltip" title='Edit'>
-                                                            <i class="fa fa-edit"></i> Edit
-                                                        </a>
-                                                        <form action="{{ route('tender.destroy', $data->tender_id) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
-                                                                <i class="fa fa-trash"></i> Delete
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                                @php
-                                                    $no++;
-                                                @endphp                                                                        
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                        <table id="tender_table" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>ID</th>
+                                    <th>Tender Name</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $no = 1;
+                                @endphp
+                                @foreach ($tender_lists as $data)
+                                    <tr>
+                                        <td>{{ $no }}</td>
+                                        <td>{{ $data->tender_id }}</td>
+                                        <td>{{ $data->tender_name }}</td>
+                                        <td>{{ $data->tender_date }}</td>
+                                        <td>
+                                            <a href="{{ route('tender.detail', $data->tender_id) }}"
+                                                class="btn btn-xs btn-primary">
+                                                <i class="fa fa-eye"></i> Detail
+                                            </a>
+                                            <a href="{{ route('tender.edit', $data->tender_id) }}"
+                                                class="btn btn-xs btn-warning" data-toggle="tooltip" title='Edit'>
+                                                <i class="fa fa-edit"></i> Edit
+                                            </a>
+                                            <form action="{{ route('tender.destroy', $data->tender_id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm"
+                                                    data-toggle="tooltip" title='Delete'>
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $no++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+    </div>
+    </div>
 @endsection
 
-@section('scripts')    
+@section('scripts')
     <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -124,13 +111,16 @@
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
     <script>
-        $(function () {
+        $(function() {
             $("#tender_table").DataTable({
-                "responsive": true, "lengthChange": false, "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "pageLength": 10
             }).buttons().container().appendTo('#tender_table_wrapper .col-md-6:eq(0)');
         });
-        
+
         setTimeout(function() {
             $('#success-alert').fadeOut('fast');
             $('#error-alert').fadeOut('fast');

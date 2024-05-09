@@ -38,6 +38,10 @@ Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () 
     Route::post('/criteria_data/store', [App\Http\Controllers\TenderDetailController::class, 'saveCriteriaData'])->name('criteria_data.save');
     Route::delete('/delete/{id}', [App\Http\Controllers\TenderDetailController::class, 'destroy'])->name('delete');
 
+    // Detail Criteria Value
+    Route::post('/criteria_value/store', [App\Http\Controllers\TenderDetailController::class, 'saveCriteriaValue'])->name('criteria_value.save');
+    Route::get('/scoring/{id}', [App\Http\Controllers\TenderDetailController::class, 'scoring'])->name('scoring');
+
     // fetchAllCriteriaValuesByTenderId
     Route::get('/criteria_values/fetchAllCriteriaValuesByTenderId/{tender_id}', [App\Http\Controllers\TenderDetailController::class, 'fetchAllCriteriaValuesByTenderId'])->name('criteria_values.fetchAllCriteriaValuesByTenderId');
 });

@@ -102,7 +102,8 @@
         $(function () {
             $("#criteria_table").DataTable({
                 "responsive": true, "lengthChange": false, "autoWidth": false,
-                // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "pageLength": 10
             }).buttons().container().appendTo('#criteria_table_wrapper .col-md-6:eq(0)');
         });
         
